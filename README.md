@@ -170,7 +170,7 @@ If you configured devcloud to use authorization (by setting a value for SCHEDULE
 be slightly modified to include the appropriate Authorization header:
 <pre>
     $ curl -i -X POST 127.0.0.1:8001/jobs -H 'Content-Type: application/json' \
-      -H "Authorization: Bearer <SCHEDULER_AUTH_TOKEN>" \
+      -H "Authorization: Bearer &lt;SCHEDULER_AUTH_TOKEN&gt;" \
       -d '{ \
             "class":"io.github.asyncomatic.starter.examples.tests.SampleScheduledTest", \
             "method":"start", \
