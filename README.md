@@ -147,7 +147,7 @@ Using ```curl``` in a separate terminal window, simply send the appropriate payl
             "queue":"devcloud.default", \
             "delay": 15 \
          }'
-    HTTP/1.1 204 No Content
+    HTTP/1.1 201 Created
     Date: Tue, 15 Aug 2023 17:56:54 GMT
 
     $
