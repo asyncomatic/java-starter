@@ -1,0 +1,24 @@
+version: '3.8'
+
+networks:
+  devcloud:
+    name: 'devcloud_network'
+
+volumes:
+  cache:
+    driver: local
+
+services:
+  executor:
+    image: java-executor
+    build: .
+    container_name: devcloud_executor
+    networks:
+      - 'devcloud'
+    environment:
+      SCHEDULER_SCHEME: 'http://'
+      SCHEDULER_HOST: 'scheduler'
+      SCHEDULER_PORT: ':8080'
+      SCHEDULER_ROUTE: '/jobs'
+      KAFKA_TOPIC: 'devcloud.default'
+      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'

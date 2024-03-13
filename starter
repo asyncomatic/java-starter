@@ -1,0 +1,43 @@
+#!/bin/sh
+
+usage() {
+  echo "Usage: starter [ install | start | stop | restart | status | logs ]"
+}
+
+install() {
+  docker compose build executor
+}
+
+start() {
+  docker compose up -d executor
+}
+
+stop() {
+  docker kill devcloud_executor
+  docker rm devcloud_executor
+}
+
+restart() {
+  stop
+  start
+}
+
+status() {
+  docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+}
+
+logs() {
+  docker compose logs -f executor
+}
+
+if [ $# -eq 0 ]; then
+  usage
+else
+  fn=$(printf '%s' "$1" | sed -e 's/-/_/g')
+  shift
+  if type "$fn" 2>/dev/null | grep -q 'function'; then
+    $fn "$@"
+  else
+    usage
+  fi
+fi
