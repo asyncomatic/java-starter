@@ -10,6 +10,7 @@ The following are prerequisites for installing and running the **java-starter** 
     openjdk 17.0.5 2022-10-18
     OpenJDK Runtime Environment Temurin-17.0.5+8 (build 17.0.5+8)
     OpenJDK 64-Bit Server VM Temurin-17.0.5+8 (build 17.0.5+8, mixed mode, sharing)
+
 </pre>
 <pre>
     $ mvn -v
@@ -18,11 +19,14 @@ The following are prerequisites for installing and running the **java-starter** 
     Java version: 17.0.5, vendor: Eclipse Adoptium, runtime: /Library/Java/JavaVirtualMachines/temurin-17.jdk/...
     Default locale: en_CA, platform encoding: UTF-8
     OS name: "mac os x", version: "12.6.9", arch: "x86_64", family: "mac"
+
 </pre>
+
 - docker execution environment
 <pre>
     $ docker -v
     Docker version 20.10.21, build baeda1f
+
 </pre>
 
 - [devcloud](https://github.com/asyncomatic/devcloud/) installed and running on your local machine 
@@ -35,6 +39,7 @@ Installing the **java-starter** project is fairly straightforward once all the p
     $ git clone git@github.com:asyncomatic/java-starter.git
     $ cd java-starter
     $ mvn install
+
 </pre>
 &nbsp;
 
@@ -55,6 +60,7 @@ run the JAR from a terminal window. Simply open a terminal window and navigate t
 
     $ mvn install
     $ java -cp target/java-starter-jar-with-dependencies.jar io.github.asyncomatic.starter.ExecutorService
+
 </pre>
 
  at which point you should see log messages similar to those shown below
@@ -71,6 +77,7 @@ run the JAR from a terminal window. Simply open a terminal window and navigate t
     [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer instanceId=aom_default_cgi, clientId=....
     [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer instanceId=aom_default_cgi, clientId=....
     [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer instanceId=aom_default_cgi, clientId=....
+    .... (more log messages stream by) ....
 
 </pre>
 
@@ -87,6 +94,7 @@ To build and install the custom Docker image, open a terminal window and navigat
     .... (navigate to project root directory) ....
 
     $ ./starter install
+
 </pre>
 
 To start the Docker image and confirm it is running:
@@ -94,6 +102,7 @@ To start the Docker image and confirm it is running:
     $ ./starter start
     [+] Running 1/1
      ⠿ Container devcloud_executor  Started
+
 </pre>
 <pre>
     $ ./starter status
@@ -103,12 +112,15 @@ To start the Docker image and confirm it is running:
     devcloud_postgres    Up 33 hours     0.0.0.0:5432->5432/tcp
     devcloud_kafka       Up 33 hours     9092/tcp, 0.0.0.0:9094->9094/tcp
     devcloud_zookeeper   Up 33 hours     2888/tcp, 0.0.0.0:2181->2181/tcp, 3888/tcp
+
 </pre>
 
 To tail the test executor logs (to confirm test execution, for example):
 <pre>
     $ ./starter logs
+
 </pre>
+
 at which point you should see log messages similar to those shown below
 <pre>
     .... (log messages stream by) ....
@@ -123,12 +135,14 @@ at which point you should see log messages similar to those shown below
     devcloud_executor  | [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer ....
     devcloud_executor  | [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer ....
     devcloud_executor  | [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer ....
+    .... (more log messages stream by) ....
 
 </pre>
 
 Finally, to stop the Docker image:
 <pre>
     $ ./starter stop
+
 </pre>
 
 &nbsp;
@@ -150,7 +164,22 @@ Using ```curl``` in a separate terminal window, simply send the appropriate payl
     HTTP/1.1 201 Created
     Date: Tue, 15 Aug 2023 17:56:54 GMT
 
-    $
+</pre>
+
+If you configured devcloud to use authorization (by setting a value for SCHEDULER_AUTH_TOKEN), the above will need to 
+be slightly modified to include the appropriate Authorization header:
+<pre>
+    $ curl -i -X POST 127.0.0.1:8001/jobs -H 'Content-Type: application/json' \
+      -H "Authorization: Bearer <SCHEDULER_AUTH_TOKEN>" \
+      -d '{ \
+            "class":"io.github.asyncomatic.starter.examples.tests.SampleScheduledTest", \
+            "method":"start", \
+            "queue":"devcloud.default", \
+            "delay": 15 \
+         }'
+    HTTP/1.1 201 Created
+    Date: Tue, 15 Aug 2023 17:56:54 GMT
+
 </pre>
 &nbsp;
 
@@ -164,6 +193,7 @@ devcloud_executor  | [main] INFO i.g.a.w.b.BasicWorker - Scheduling test method 
 devcloud_executor  | [main] INFO i.g.a.w.b.BasicWorker - Calling test method: i.g.a.s.e.t.SampleScheduledTest#nextWithDelay
 devcloud_executor  | [main] INFO i.g.a.s.e.t.SampleScheduledTest - Executing test method: i.g.a.s.e.t.SampleScheduledTest#nextWithDelay
 devcloud_executor  | [main] INFO i.g.a.w.b.BasicWorker - Execution of test method (STATUS: PASSED): i.g.a.s.e.t.SampleScheduledTest#nextWithDelay
+
 </pre>
 &nbsp;
 
